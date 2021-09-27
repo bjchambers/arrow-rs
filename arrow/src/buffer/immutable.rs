@@ -416,6 +416,24 @@ mod tests {
     }
 
     #[test]
+    fn test_bit_slice() {
+        let buf = Buffer::from(&[2, 4, 6, 8, 10]);
+        let slice = buf.bit_slice(1, 8);
+        assert_eq!(slice.len(), 1);
+        let expected = Buffer::from(&[1]);
+        assert_eq!(&slice, &expected);
+    }
+
+    #[test]
+    fn test_bit_slice_aligned() {
+        let buf = Buffer::from(&[2, 4, 6, 8, 10]);
+        let slice = buf.bit_slice(8, 8);
+        let expected = Buffer::from(&[4]);
+        assert_eq!(slice.len(), 1);
+        assert_eq!(&slice, &expected);
+    }
+
+    #[test]
     fn test_access_concurrently() {
         let buffer = Buffer::from(vec![1, 2, 3, 4, 5]);
         let buffer2 = buffer.clone();
