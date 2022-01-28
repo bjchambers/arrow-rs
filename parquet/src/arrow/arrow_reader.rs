@@ -987,6 +987,21 @@ mod tests {
     }
 
     #[test]
+    fn test_single_null_i32() {
+        let path = format!("{}/one_null_int32.parquet", env!("CARGO_MANIFEST_DIR"));
+        let parquet_file_reader =
+            SerializedFileReader::try_from(File::open(&path).unwrap()).unwrap();
+        let mut arrow_reader = ParquetFileArrowReader::new(Arc::new(parquet_file_reader));
+        let record_batch_reader = arrow_reader
+            .get_record_reader(60)
+            .expect("Failed to read into array!");
+
+        for batch in record_batch_reader {
+            batch.unwrap();
+        }
+    }
+
+    #[test]
     fn test_nested_nullability() {
         let message_type = "message nested {
           OPTIONAL Group group {
